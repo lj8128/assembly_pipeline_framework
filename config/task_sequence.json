@@ -1,0 +1,22 @@
+[
+    { 
+        "task_name": "ws_A",
+        "fid_id": 1,
+        "latency": 1.0
+    },
+    {
+        "task_name": "ws_B",
+        "fid_id": 2,
+        "latency": 3.0
+    },
+    {
+        "task_name": "ws_C",
+        "fid_id": 3,
+        "latency": 1.0
+    },
+    {
+        "task_name": "ws_D",
+        "fid_id": 4,
+        "latency": 1.5
+    }
+]

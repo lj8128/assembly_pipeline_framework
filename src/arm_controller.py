@@ -22,44 +22,28 @@ class ArmController:
         self.MOVING_TIME = 1
         self.DEBUG = True
 
-    def run(self):
-        arm_command_sent = False
-        rate = rospy.Rate(10.0)
-
-        while not (rospy.is_shutdown() or arm_command_sent):
-            try:
-                self._init_arm_pose()
-
-                (height, dist, yaw) = self._get_pick_args()
-                self._pick(height, dist, yaw)
-
-                self._init_arm_pose()
-
-                (height, dist, yaw) = self._get_place_args()
-                self._place(height, dist, yaw)
-
-                self._retire_robot()
-
-                arm_command_sent = True
-
-            except (tf2_ros.LookupException,
-                    tf2_ros.ExtrapolationException,
-                    tf2_ros.ConnectivityException):
-                continue
-
-            rate.sleep()
-
-    def _init_arm_pose(self):
+    def init_arm_pose(self):
         self.arm_client.brl_go_to_sleep_pose()
         self.arm_client.brl_set_ee_pose_components(
                 x=self.INIT_DIST,
                 z=self.INIT_HEIGHT,
                 moving_time=self.MOVING_TIME)
 
-    def _get_pick_args(self):
+    def retire_robot(self):
+        self.arm_client.brl_go_to_sleep_pose()
+
+    def pick_up(self, cargo_frame_name):
+        (height, dist, yaw) = self._get_pick_args(cargo_frame_name)
+        self._pick(height, dist, yaw)
+
+    def place_at(self, ws_frame_name):
+        (height, dist, yaw) = self._get_place_args(ws_frame_name)
+        self._place(height, dist, yaw)
+
+    def _get_pick_args(self, cargo_frame_name):
         tf_base_to_pickup = self.tf_buffer.lookup_transform(
                 'px100/base_link',
-                'pickup',
+                cargo_frame_name,
                 rospy.Time()).transform
         dist = self._get_dist_base_orig_to_dest_orig(tf_base_to_pickup)
         yaw = self._get_yaw(tf_base_to_pickup.translation.y, dist)
@@ -71,10 +55,10 @@ class ArmController:
         self._move_robot_limbs(dist, height)
         self._close_gripper()
 
-    def _get_place_args(self):
+    def _get_place_args(self, ws_frame_name):
         tf_base_to_place = self.tf_buffer.lookup_transform(
                 'px100/base_link',
-                'place',
+                ws_frame_name,
                 rospy.Time()).transform
         dist = self._get_dist_base_orig_to_dest_orig(tf_base_to_place)
         yaw = self._get_yaw(tf_base_to_place.translation.y, dist)
@@ -117,14 +101,4 @@ class ArmController:
 
     def _close_gripper(self):
         self.arm_client.brl_close_gripper()
-
-    def _retire_robot(self):
-        self.arm_client.brl_go_to_sleep_pose()
-
-if __name__ == '__main__':
-    rospy.init_node('arm_controller')
-    res = 'n'
-    while res != 'y' and res != 'yes':
-        res = input('Are all fiducials being detected? (y/n) ').lower()
-    ArmController().run()
 
