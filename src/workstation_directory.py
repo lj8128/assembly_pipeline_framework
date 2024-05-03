@@ -4,6 +4,8 @@ class WsDirectory:
     def __init__(self):
         self._d_head = WsNode(ws_name='dummy_head')
         self._d_tail = WsNode(ws_name='dummy_tail')
+        self._d_head.next = self._d_tail
+        self._d_tail.prev = self._d_head
         self._ws_dict = {}
         self._ws_count = 0
 
@@ -41,6 +43,9 @@ class WsDirectory:
                     f'exists in the ws directory! ')
 
         return self._ws_dict[ws_name]
+    
+    def get_ws_dict(self):
+        return self._ws_dict 
 
     def size(self):
         return self._ws_count

@@ -3,13 +3,25 @@
 import rospy
 import tf2_ros
 from arm_controller import ArmController
+from workspace_registrar import WorkspaceRegistrar
 
 class AsmLineController:
 
     def __init__(self):
         self.arm_ctrl = ArmController()
+        self.ws_dir = WorkspaceRegistrar().return_built_ws_directory()
 
     def run(self):
+
+    def _test_ws_registrar(self):
+        for key, value in self.ws_dir.get_ws_dict().items():
+            rospy.loginfo('==============================')
+            rospy.loginfo(f'ws_dir entry key: {key}')
+            rospy.loginfo(f'ws_node name: {value.ws_name}')
+            rospy.loginfo(f'ws_node latency: {value.latency}')
+            rospy.loginfo('==============================')
+
+    def _test_pick_and_place(self):
         arm_command_sent = False
         rate = rospy.Rate(10.0)
 
@@ -28,14 +40,14 @@ class AsmLineController:
                     tf2_ros.ConnectivityException):
                 continue
 
-    def pick_and_place(self, cf_name, ws_name, moving_time=1.25):
+    def _pick_and_place(self, cf_name, ws_name, moving_time=1.25):
         self.arm_ctrl.pick_up(cf_name, moving_time)
         self.arm_ctrl.place_at(ws_name, moving_time)
 
 
 if __name__ == '__main__':
     rospy.init_node('asm_line_controller')
-    res = 'n'
-    while res != 'y' and res != 'yes':
-        res = input('Are all fiducials being detected? (y/n) ').lower()
+    # res = 'n'
+    # while res != 'y' and res != 'yes':
+    #     res = input('Are all fiducials being detected? (y/n) ').lower()
     AsmLineController().run()

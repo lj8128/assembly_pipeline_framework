@@ -20,6 +20,4 @@
    <node name="cargo_frame_broadcaster" pkg="assembly_pipeline_framework" type="cargo_frame_broadcaster.py" output="screen" />
     <node name="workstation_frame_broadcaster" pkg="assembly_pipeline_framework" type="workstation_frame_broadcaster.py" output="screen" />
 
-    <!--<node name="test_frame_broadcaster" pkg="assembly_pipeline_framework" type="test_frame_broadcaster.py" output="screen" />-->
-
 </launch>
