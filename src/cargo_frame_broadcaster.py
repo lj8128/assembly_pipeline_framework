@@ -36,7 +36,7 @@ class CargoFrameBroadcaster:
                         parent_fid)
                 self._set_new_cf_translation(new_cf, parent_fid)
                 self._set_new_cf_rotation(new_cf, parent_fid)
-
+                
                 self.tf_broadcaster.sendTransform(new_cf)
             except (tf2_ros.LookupException,
                     tf2_ros.ExtrapolationException, 
