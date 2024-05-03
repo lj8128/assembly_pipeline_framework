@@ -14,7 +14,7 @@ class WorkstationFrameBroadcaster:
             self.tf_broadcaster = tf2_ros.TransformBroadcaster()
         except KeyError:
             raise LookupError('Could not fetch ROS params for the '
-                    'workstation frame broadcaster!')
+                    'WorkstationFrameBroadcaster!')
 
     def run(self):
         rate = rospy.Rate(10.0)
