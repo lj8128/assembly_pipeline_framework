@@ -4,14 +4,30 @@ import rospy
 import tf2_ros
 from arm_controller import ArmController
 from workspace_registrar import WorkspaceRegistrar
+from cargo_registrar import CargoRegistrar
 
 class AsmLineController:
 
     def __init__(self):
         self.arm_ctrl = ArmController()
         self.ws_dir = WorkspaceRegistrar().return_built_ws_directory()
+        self.creg = CargoRegistrar()
 
     def run(self):
+        self._test_cargo_registrar()
+
+    def _test_cargo_registrar(self):
+        rate = rospy.Rate(10.0)
+        while not rospy.is_shutdown():
+            with self.creg.dict_lock:
+                for key, value in self.creg.cargo_dict.items():
+                    rospy.loginfo('==============================')
+                    rospy.loginfo(f'cargo_dict entry key: {key}')
+                    rospy.loginfo(f'Cargo cf_id: {value.cargo_frame_id}')
+                    rospy.loginfo(f'Cargo cur_ws: {value.cur_ws}')
+                    rospy.loginfo(f'Cargo last_placed: {value.last_placed}')
+                    rospy.loginfo('==============================')
+            rospy.loginfo(f'pnp_queue_top: {self.creg.pnp_queue.get()}')
 
     def _test_ws_registrar(self):
         for key, value in self.ws_dir.get_ws_dict().items():

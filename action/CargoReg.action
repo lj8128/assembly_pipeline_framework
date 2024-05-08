@@ -1,0 +1,11 @@
+# Goal
+string cargo_frame_id
+string cur_ws
+time last_placed
+---
+# Result
+string log
+bool success
+---
+# Feedback
+string log
