@@ -34,7 +34,7 @@ class CargoRegistrar:
         result = CargoRegResult()
         result.log = (
                 f'Registered new cargo with cargo frame id: {cf_id}, '
-                f'which was last placed at: {reg_time}')
+                f'which was last placed at: {last_placed}')
         result.success = True
         self.cargo_reg_server.set_succeeded(result)
 

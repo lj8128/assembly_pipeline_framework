@@ -1,12 +1,14 @@
 from workstation_node import WsNode
+from shared_constants import DUMMY_HEAD_WS_NAME
 
 class WsDirectory:
     def __init__(self):
-        self._d_head = WsNode(ws_name='dummy_head')
-        self._d_tail = WsNode(ws_name='dummy_tail')
+        self._d_head = WsNode(ws_name=DUMMY_HEAD_WS_NAME)
+        self._d_tail = WsNode(ws_name='dummy_tail_ws')
         self._d_head.next = self._d_tail
         self._d_tail.prev = self._d_head
         self._ws_dict = {}
+        self._ws_dict[DUMMY_HEAD_WS_NAME] = self._d_head
         self._ws_count = 0
 
     def insert(self, ws_node):
