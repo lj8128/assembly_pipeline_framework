@@ -11,6 +11,7 @@ from assembly_pipeline_framework.msg import (
 class CargoRegistrar:
     def __init__(self):
         self.pnp_queue = Queue()
+        self.set_of_q_els = set()
         self.dict_lock = Lock()
         self.cargo_dict = {}
         self.cargo_reg_server = SimpleActionServer(

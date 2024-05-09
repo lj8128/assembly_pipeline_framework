@@ -9,6 +9,7 @@ class WsDirectory:
         self._d_head.next = self._d_tail
         self._d_tail.prev = self._d_head
         self._ws_dict = {}
+        self._ws_dict[DUMMY_HEAD_WS_NAME] = self._d_head
         self._ws_count = 0
 
     def insert(self, ws_node):
@@ -16,7 +17,7 @@ class WsDirectory:
 
         if cur_ws_name in self._ws_dict:
             raise ValueError(f'A workstation node with the name '
-                    f'{ws_node} already exists in the ws directory! '
+                    f'{cur_ws_name} already exists in the ws directory! '
                     f'Note: all ws names must be unique.')
 
         self._back_insert_node(ws_node) 
@@ -29,7 +30,7 @@ class WsDirectory:
         cur_ws_name = ws_node.ws_name
 
         if cur_ws_name not in self._ws_dict:
-            raise ValueError(f'No workstation with the name {ws_node} '
+            raise ValueError(f'No workstation with the name {cur_ws_name} '
                     f'exists in the ws directory! ')
 
         ws_node.prev.next = ws_node.next
@@ -41,7 +42,7 @@ class WsDirectory:
         
     def get(self, ws_name):
         if ws_name not in self._ws_dict:
-            raise ValueError(f'No workstation with the name {ws_node} '
+            raise ValueError(f'No workstation with the name {ws_name} '
                     f'exists in the ws directory! ')
 
         return self._ws_dict[ws_name]
