@@ -5,6 +5,8 @@ import tf2_ros
 from arm_controller import ArmController
 from workspace_registrar import WorkspaceRegistrar
 from cargo_registrar import CargoRegistrar
+from cargo_enqueuer import CargoEnqueuer
+from threading import Event
 
 class AsmLineControllerTester:
 
@@ -12,9 +14,32 @@ class AsmLineControllerTester:
         self.arm_ctrl = ArmController()
         self.ws_dir = WorkspaceRegistrar().return_built_ws_directory()
         self.creg = CargoRegistrar()
+        self.quit_enq_ev = Event()
+        self.cargo_enq = CargoEnqueuer(self.creg.pnp_queue,
+                self.creg.cargo_dict,
+                self.creg.dict_lock,
+                self.ws_dir,
+                self.quit_enq_ev
+                )
+        self.cargo_enq.start()
+        self.shutting_down = False
+        rospy.on_shutdown(self.shutdown_hook)
+
+    def shutdown_hook(self):
+        self.quit_enq_ev.set()
+        self.cargo_enq.join()
+        self.shutting_down = True
 
     def run(self):
-        self._test_cargo_registrar()
+        self._test_carg_enq()
+
+    def _test_carg_enq(self):
+        rate = rospy.Rate(10.0)
+        while not self.shutting_down:
+            if not self.creg.pnp_queue.empty():
+                rospy.loginfo('==============================')
+                rospy.loginfo(f'Dequeued: {self.creg.pnp_queue.get()}')
+                rospy.loginfo('==============================')
 
     def _test_cargo_registrar(self):
         rate = rospy.Rate(10.0)
@@ -56,8 +81,5 @@ class AsmLineControllerTester:
                 continue
 
 if __name__ == '__main__':
-    rospy.init_node('asm_line_controller')
-    # res = 'n'
-    # while res != 'y' and res != 'yes':
-    #     res = input('Are all fiducials being detected? (y/n) ').lower()
+    rospy.init_node('test_asm_line_controller')
     AsmLineControllerTester().run()
