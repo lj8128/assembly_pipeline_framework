@@ -25,6 +25,7 @@ class AsmLineController:
 
     def shutdown_hook(self):
         self.quit_enq_ev.set()
+        self.cargo_enq.join()
         self.shutting_down = True
 
     def run(self):

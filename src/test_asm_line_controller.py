@@ -31,7 +31,6 @@ class AsmLineControllerTester:
         self.shutting_down = True
 
     def run(self):
-        self._test_carg_enq()
 
     def _test_carg_enq(self):
         rate = rospy.Rate(10.0)
