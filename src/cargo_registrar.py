@@ -27,7 +27,6 @@ class CargoRegistrar:
                 last_placed=goal.last_placed)
         with self.dict_lock:
             self.cargo_dict[cf_id] = new_cargo
-        self.pnp_queue.put(cf_id)
         self._set_cargo_reg_server_result(cf_id, goal.last_placed)
 
     def _set_cargo_reg_server_result(self, cf_id, last_placed):
