@@ -29,7 +29,7 @@ class AsmLineControllerTester:
         self.shutting_down = True
 
     def run(self):
-        self._test_main_logic()
+        self._test_pick_and_place()
 
     def _test_main_logic(self):
         rate = rospy.Rate(10.0)

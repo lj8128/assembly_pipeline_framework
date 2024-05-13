@@ -12,8 +12,6 @@
 
     <include file="$(find usb_cam)/launch/usb_cam-test.launch" />
     
-    <node name="task_list_parser" pkg="assembly_pipeline_framework" type="task_list_parser.py" output="screen"/>
-
     <node name="asm_line_controller" pkg="assembly_pipeline_framework" type="asm_line_controller.py" output="screen"/>
 
     <node name="fixed_marker_frame_broadcaster" pkg="assembly_pipeline_framework" type="fixed_marker_frame_broadcaster.py" output="screen"/>

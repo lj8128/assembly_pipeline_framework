@@ -37,7 +37,9 @@ class AsmLineController:
         while not self.shutting_down:
             with self.creg.dict_lock:
                  if not self.creg.pnp_queue.empty():
+                    rospy.loginfo('**************************************')
                     rospy.loginfo(f'QUEUE SIZE: {self.creg.pnp_queue.qsize()}')
+                    rospy.loginfo('**************************************')
                     cur_cf_id = self.creg.pnp_queue.get()
                     self.creg.set_of_q_els.remove(cur_cf_id)
 
@@ -46,6 +48,9 @@ class AsmLineController:
 
                     self.pick_and_place(cur_cf_id, cur_ws_name) 
 
+                    rospy.loginfo('**************************************')
+                    rospy.loginfo(f'Exited pick and place for {cur_cf_id}')
+                    rospy.loginfo('**************************************')
                     cur_ws_obj = self.ws_dir.get(cur_ws_name)
                     next_ws_name = cur_ws_obj.next.ws_name
                     cur_cargo_obj.cur_ws_name = next_ws_name
